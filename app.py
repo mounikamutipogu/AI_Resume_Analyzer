@@ -7,7 +7,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 app = Flask(__name__)
 
-# ⭐ Skills list
+
 ALL_SKILLS = [
     "python", "java", "c", "c++", "sql",
     "html", "css", "javascript",
@@ -15,13 +15,12 @@ ALL_SKILLS = [
     "django", "git", "github", "react"
 ]
 
-# ---------------- HOME ----------------
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
 
-# ---------------- ANALYZE ----------------
 @app.route('/upload', methods=['POST'])
 def upload():
 
@@ -37,24 +36,22 @@ def upload():
 
     text_lower = text.lower()
 
-    # ---------------- SKILLS ----------------
     found_skills = []
     for skill in ALL_SKILLS:
         if skill in text_lower:
             found_skills.append(skill)
 
-    # ---------------- SCORE ----------------
     score = len(found_skills) * 10
     if score > 100:
         score = 100
 
-    # ---------------- MISSING ----------------
+    
     missing_skills = []
     for skill in ALL_SKILLS:
         if skill not in found_skills:
             missing_skills.append(skill)
 
-    # ---------------- SUGGESTIONS ----------------
+ 
     suggestions = []
 
     if "python" not in found_skills:
@@ -68,7 +65,6 @@ def upload():
 
     suggestions.append("Real projects add cheyyi")
 
-    # ---------------- AI FEEDBACK ----------------
     if score >= 80:
         ai_feedback = "Excellent resume! Focus on advanced projects."
     elif score >= 50:
@@ -76,7 +72,7 @@ def upload():
     else:
         ai_feedback = "Improve core skills and projects."
 
-    # ---------------- JOB MATCH ----------------
+  
     jd_skills = []
     for skill in ALL_SKILLS:
         if skill in job_desc:
@@ -90,7 +86,7 @@ def upload():
     if match_percent > 100:
         match_percent = 100
 
-    # ---------------- STORE GLOBALS ----------------
+
     global DATA
     DATA = {
         "text": text,
@@ -102,7 +98,6 @@ def upload():
         "match_percent": match_percent
     }
 
-    # ---------------- OUTPUT ----------------
     return f"""
     <div class="container mt-5">
 
@@ -132,10 +127,9 @@ def upload():
         </div>
 
     </div>
-    """
+  
 
 
-# ---------------- PDF GENERATION ----------------
 def generate_pdf(data):
 
     file_path = "/tmp/resume_report.pdf"  # deployment safe path
@@ -167,7 +161,6 @@ def generate_pdf(data):
     return file_path
 
 
-# ---------------- DOWNLOAD FIXED ----------------
 @app.route('/download')
 def download():
 
@@ -180,7 +173,7 @@ def download():
     )
 
 
-# ---------------- RUN ----------------
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
